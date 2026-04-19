@@ -1,0 +1,83 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * CSV import form for users.
+ *
+ * @package    local_recruitment
+ * @copyright  2026 Custom Development
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace local_recruitment\form;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($GLOBALS['CFG']->libdir . '/formslib.php');
+
+/**
+ * Form for importing users via CSV.
+ */
+class import_users_form extends \moodleform {
+
+    /**
+     * Form definition.
+     */
+    protected function definition() {
+        $mform = $this->_form;
+
+        $mform->addElement('hidden', 'did');
+        $mform->setType('did', PARAM_INT);
+
+        $mform->addElement('filepicker', 'csvfile',
+            get_string('csvfilesemicolon', 'local_recruitment'), null, [
+            'accepted_types' => '*',
+        ]);
+        $mform->addRule('csvfile', null, 'required');
+
+        $mform->addElement('static', 'csvformat', '',
+            get_string('csvformat', 'local_recruitment'));
+
+        $this->add_action_buttons(true, get_string('importusers', 'local_recruitment'));
+    }
+
+    /**
+     * Validate uploaded file is a CSV.
+     *
+     * @param array $data
+     * @param array $files
+     * @return array
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        // Check file extension directly from draft area (not via get_new_filename which triggers recursion).
+        if (!empty($data['csvfile'])) {
+            $fs = get_file_storage();
+            $context = \context_user::instance($GLOBALS['USER']->id);
+            $draftfiles = $fs->get_area_files($context->id, 'user', 'draft', $data['csvfile'], 'id DESC', false);
+            if (!empty($draftfiles)) {
+                $file = reset($draftfiles);
+                $filename = $file->get_filename();
+                if (!preg_match('/\.csv$/i', $filename)) {
+                    $errors['csvfile'] = get_string('csvfileonly', 'local_recruitment');
+                }
+            }
+        }
+
+        return $errors;
+    }
+}

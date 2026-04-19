@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template format_archive/local/content/section
+
+    Overrides core_courseformat/local/content/section for the archive format.
+    Adds the "archive-separator" class to sections with isseparator=1.
+}}
+<li id="section-{{num}}"
+    class="section course-section main archive-section {{#onlysummary}} section-summary {{/onlysummary}} clearfix
+            {{#ishidden}} hidden {{/ishidden}} {{#iscurrent}}{{^displayonesection}} current {{/displayonesection}}{{/iscurrent}}
+            {{#isstealth}} orphaned {{/isstealth}}
+            {{#isseparator}} archive-separator {{/isseparator}}"
+    data-sectionid="{{num}}"
+    data-sectionreturnnum="{{sectionreturnnum}}"
+    data-for="section"
+    data-id="{{id}}"
+    data-number="{{num}}"
+    data-sectionname="{{sectionname}}"
+    {{#isseparator}} data-isseparator="1" {{/isseparator}}
+    {{#isstealth}} data-orphan="true" {{/isstealth}}
+>
+    <div class="section-item">
+        {{$ core_courseformat/local/content/section/content }}
+            {{> core_courseformat/local/content/section/content }}
+        {{/ core_courseformat/local/content/section/content }}
+    </div>
+
+    {{#insertafter}}
+        {{#numsections}}
+            {{$ core_courseformat/local/content/addsection}}
+                {{> core_courseformat/local/content/section/addsectiondivider }}
+            {{/ core_courseformat/local/content/addsection}}
+        {{/numsections}}
+    {{/insertafter}}
+</li>

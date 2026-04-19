@@ -1,0 +1,19 @@
+/**
+ * Styles for format_preparation
+ *
+ * @package format_preparation
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.preparation-course-view .preparation-quiz-card {
+    border-left: 4px solid var(--platform-color, #ca3120);
+}
+
+.preparation-course-view .preparation-quiz-card .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.preparation-course-view .preparation-quiz-card .card-header h3 {
+    color: var(--platform-color, #ca3120);
+}

@@ -1,0 +1,84 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * English strings for local_support.
+ *
+ * @package    local_support
+ * @copyright  2026 Custom Development
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$string['pluginname'] = 'Custom File Support';
+$string['fallbackemail'] = 'Fallback email for password reset';
+$string['fallbackemail_desc'] = 'If a user enters an email address that does not exist in the system during password reset, the reset email will be sent to this address instead. Leave empty to disable.';
+$string['peselnotfound'] = 'User with this PESEL number does not exist.';
+$string['fallbackemailsubject'] = 'Password reset attempt for unknown email: {$a}';
+$string['fallbackemailbody'] = 'Someone tried to reset a password using email address: {$a}, but this email does not exist in the system.';
+$string['fallbackemailbody_html'] = '<p>Someone tried to reset a password using email address: <strong>{$a}</strong>, but this email does not exist in the system.</p>';
+$string['emailpasswordconfirmmaybesent'] = 'If there is an account associated with this information, an email with instructions has been sent.';
+$string['blockedurls'] = 'Blocked URLs for non-admin users';
+$string['blockedurls_desc'] = 'Enter one URL path per line. Non-admin users visiting pages matching these paths will be redirected to /my/. Use partial paths, e.g. /grade/report/overview/index.php';
+$string['sms_heading'] = 'SMS settings (SerwerSMS.pl)';
+$string['sms_heading_desc'] = 'Configuration for the SMS sending service via SerwerSMS.pl API.';
+$string['sms_api_token'] = 'API Token';
+$string['sms_api_token_desc'] = 'Bearer API token from SerwerSMS.pl (Client Panel > Interface Settings > HTTPS API > API Tokens).';
+$string['sms_sender'] = 'SMS Sender name';
+$string['sms_sender_desc'] = 'Sender name displayed on the SMS (must be registered in SerwerSMS.pl).';
+$string['event_sms_sent'] = 'SMS sent';
+$string['wp_sync_heading'] = 'WordPress synchronization';
+$string['wp_sync_heading_desc'] = 'Settings for sending user data to WordPress when declaration flag is changed.';
+$string['wp_sync_endpoint'] = 'WordPress endpoint URL';
+$string['wp_sync_endpoint_desc'] = 'Full URL of the WordPress REST API endpoint that receives user data (e.g. https://example.com/wp-json/moodle-sync/v1/create-user).';
+$string['wp_sync_token'] = 'WordPress HMAC secret token';
+$string['wp_sync_token_desc'] = 'Secret token used to sign the request with HMAC-SHA256. Must match the token configured on the WordPress side.';
+$string['event_wp_sync_sent'] = 'User data sent to WordPress';
+$string['internaltest_notdone'] = 'Not done';
+$string['internaltest_passed'] = 'Passed';
+$string['internaltest_failed'] = 'Failed';
+$string['internaltest_active'] = 'Active';
+$string['internaltest_inactive'] = 'Inactive';
+$string['red_brand_heading'] = 'Red theme – branding';
+$string['red_brand_heading_desc'] = 'Upload a custom logo and favicon that will be displayed for users whose active direction uses the red colour theme. Leave empty to use the platform defaults.';
+$string['red_logo'] = 'Logo (red theme)';
+$string['red_logo_desc'] = 'Logo image shown in the navigation bar for red theme users. Recommended: PNG or SVG, transparent background.';
+$string['red_favicon'] = 'Favicon (red theme)';
+$string['red_favicon_desc'] = 'Browser tab icon for red theme users. Accepted formats: .ico, .png, .svg, .jpg, .jpeg.';
+$string['gardener_brand_heading'] = 'Ogrodnik (green theme) – branding';
+$string['gardener_brand_heading_desc'] = 'Upload a custom logo and favicon that will be displayed for users whose active direction uses the Ogrodnik (green) colour theme. Leave empty to use the platform defaults.';
+$string['green_logo'] = 'Logo (green theme)';
+$string['green_logo_desc'] = 'Logo image shown in the navigation bar for Ogrodnik theme users. Recommended: PNG or SVG, transparent background.';
+$string['green_favicon'] = 'Favicon (green theme)';
+$string['green_favicon_desc'] = 'Browser tab icon for Ogrodnik theme users. Accepted formats: .ico, .png, .svg, .jpg, .jpeg.';
+$string['gardener_smtp_heading'] = 'Ogrodnik (green theme) – outgoing mail (SMTP)';
+$string['gardener_smtp_heading_desc'] = 'Separate SMTP server used for all emails sent to users whose active direction has the "Ogrodnik (green)" theme. Leave the SMTP server field empty to use the platform default.';
+$string['gardener_smtphosts'] = 'SMTP server';
+$string['gardener_smtphosts_desc'] = 'Hostname or IP of the SMTP server (e.g. smtp.example.com). Leave empty to use the platform default.';
+$string['gardener_smtpport'] = 'SMTP port';
+$string['gardener_smtpport_desc'] = 'Port number (usually 25, 465 for SSL, 587 for TLS).';
+$string['gardener_smtpsecure'] = 'SMTP security';
+$string['gardener_smtpsecure_desc'] = 'Encryption protocol for the SMTP connection.';
+$string['gardener_smtpsecure_none'] = 'None';
+$string['gardener_smtpuser'] = 'SMTP username';
+$string['gardener_smtpuser_desc'] = 'Username for SMTP authentication. Leave empty if authentication is not required.';
+$string['gardener_smtppass'] = 'SMTP password';
+$string['gardener_smtppass_desc'] = 'Password for SMTP authentication.';
+$string['gardener_smtp_fromemail'] = 'From address';
+$string['gardener_smtp_fromemail_desc'] = 'The From e-mail address used when sending from the Ogrodnik SMTP server.';
+$string['gardener_smtp_fromname'] = 'From name';
+$string['gardener_smtp_fromname_desc'] = 'The sender name displayed in the From field for Ogrodnik emails.';
