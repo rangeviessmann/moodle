@@ -26,6 +26,7 @@
                            new moodle_url('/group/index.php', array('id' => $courseid)),
                            get_string('groups'));
 
+
     $row[] = new tabobject('groupings',
                            new moodle_url('/group/groupings.php', array('id' => $courseid)),
                            get_string('groupings', 'group'));
