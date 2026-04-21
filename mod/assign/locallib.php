@@ -4766,7 +4766,8 @@ class assign {
         // Need submit permission to submit an assignment.
         $this->require_view_grades();
 
-        $PAGE->set_pagelayout('embedded');
+        $PAGE->set_pagelayout('incourse');
+        $PAGE->add_body_class('assign-grader-view');
 
         $PAGE->activityheader->disable();
 

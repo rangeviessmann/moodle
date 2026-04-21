@@ -69,7 +69,7 @@ class course_base_table extends \table_sql {
             "{course} c
              JOIN {course_categories} cat ON cat.id = c.category
              JOIN {course_categories} parent ON parent.id = cat.parent AND parent.idnumber = 'kategorie_bazowe'",
-            $idnumberlike,
+            "$idnumberlike AND cat.visible = 1",
             ['idnkw' => '%' . $coursetype . '%']
         );
     }

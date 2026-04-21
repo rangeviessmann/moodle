@@ -34,6 +34,29 @@ $recruitment = $DB->get_record('local_recruitment', ['id' => $rid], '*', MUST_EX
 
 $pageurl = new moodle_url('/local/recruitment/courses.php', ['rid' => $rid]);
 
+// Handle category visibility toggle.
+// $togglecatvisibility holds the direction ID — the target_categoryid is resolved
+// server-side so the URL never carries a raw category ID that could mismatch.
+$togglecatvisibility = optional_param('togglecatvisibility', 0, PARAM_INT);
+if ($togglecatvisibility) {
+    require_sesskey();
+    $direction = $DB->get_record(
+        'local_recruitment_course',
+        ['id' => $togglecatvisibility, 'recruitmentid' => $rid],
+        'id, target_categoryid',
+        MUST_EXIST
+    );
+    if (!empty($direction->target_categoryid)) {
+        $cat = core_course_category::get($direction->target_categoryid, MUST_EXIST, true);
+        if ($cat->visible) {
+            $cat->hide();
+        } else {
+            $cat->show();
+        }
+    }
+    redirect($pageurl);
+}
+
 $PAGE->set_url($pageurl);
 $PAGE->set_title(get_string('directions', 'local_recruitment') . ': ' . format_string($recruitment->name));
 $PAGE->set_heading(get_string('directions', 'local_recruitment') . ': ' . format_string($recruitment->name));

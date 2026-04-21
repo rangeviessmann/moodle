@@ -33,6 +33,9 @@ require_once($GLOBALS['CFG']->libdir . '/tablelib.php');
  */
 class direction_table extends \table_sql {
 
+    /** @var int Recruitment ID used when building the visibility toggle URL. */
+    protected int $recruitmentid;
+
     /**
      * Constructor.
      *
@@ -43,6 +46,7 @@ class direction_table extends \table_sql {
     public function __construct(string $uniqueid, \moodle_url $url, int $recruitmentid) {
         parent::__construct($uniqueid);
         $this->baseurl = $url;
+        $this->recruitmentid = $recruitmentid;
 
         $columns = ['name', 'basecategoryname', 'copystatus', 'archivecoursename', 'preparationcoursename',
                      'quizescoursename', 'cohortname', 'actions'];
@@ -82,16 +86,19 @@ class direction_table extends \table_sql {
         $this->set_sql(
             'rc.id, rc.recruitmentid, rc.name, rc.basecategoryid, rc.copystatus,
              rc.archive_course, rc.preparation_course, rc.quizes_course, rc.cohortid,
+             rc.target_categoryid,
              cat.name AS basecategoryname,
              c1.fullname AS archivecoursename, c2.fullname AS preparationcoursename,
              c3.fullname AS quizescoursename,
-             co.name AS cohortname',
+             co.name AS cohortname,
+             tcat.visible AS targetvisible',
             '{local_recruitment_course} rc
              LEFT JOIN {course_categories} cat ON cat.id = rc.basecategoryid
              LEFT JOIN {course} c1 ON c1.id = rc.archive_course
              LEFT JOIN {course} c2 ON c2.id = rc.preparation_course
              LEFT JOIN {course} c3 ON c3.id = rc.quizes_course
-             LEFT JOIN {cohort} co ON co.id = rc.cohortid',
+             LEFT JOIN {cohort} co ON co.id = rc.cohortid
+             LEFT JOIN {course_categories} tcat ON tcat.id = rc.target_categoryid',
             'rc.recruitmentid = :recruitmentid',
             ['recruitmentid' => $recruitmentid]
         );
@@ -188,6 +195,23 @@ class direction_table extends \table_sql {
         $actions .= \html_writer::link($editurl, $editicon);
         $actions .= ' ';
         $actions .= \html_writer::link($deleteurl, $deleteicon);
+
+        // Visibility toggle for the direction's target category.
+        // We pass only the direction ID; catid is resolved server-side to prevent
+        // any URL-parameter mismatch.
+        if (!empty($row->target_categoryid)) {
+            $isvisible = !empty($row->targetvisible);
+            $toggleurl = new \moodle_url('/local/recruitment/courses.php', [
+                'rid'                => $this->recruitmentid,
+                'togglecatvisibility'=> $row->id,
+                'sesskey'            => sesskey(),
+            ]);
+            $iconkey   = $isvisible ? 't/hide' : 't/show';
+            $icontitle = $isvisible ? get_string('hide') : get_string('show');
+            $visibilityicon = $OUTPUT->pix_icon($iconkey, $icontitle);
+            $actions .= ' ';
+            $actions .= \html_writer::link($toggleurl, $visibilityicon, ['title' => $icontitle]);
+        }
 
         return $actions;
     }

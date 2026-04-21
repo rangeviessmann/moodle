@@ -46,21 +46,24 @@ class course_overview_table extends \table_sql {
         parent::__construct($uniqueid);
         $this->baseurl = $url;
 
-        $columns = ['directionname', 'coursename'];
+        $columns = ['directionname', 'coursename', 'wyniki'];
         $headers = [
             get_string('directionname', 'local_recruitment'),
             get_string('course'),
+            get_string('progressreport', 'local_recruitment'),
         ];
 
         $this->define_columns($columns);
         $this->define_headers($headers);
         $this->define_baseurl($url);
-        $this->column_style('directionname', 'width', '50%');
-        $this->column_style('coursename', 'width', '50%');
+        $this->column_style('directionname', 'width', '45%');
+        $this->column_style('coursename', 'width', '45%');
+        $this->column_style('wyniki', 'width', '10%');
         $this->collapsible(false);
         $this->sortable(true, 'directionname', SORT_ASC);
         $this->pageable(true);
         $this->no_sorting('coursename');
+        $this->no_sorting('wyniki');
 
         $coursecol = self::get_course_column($coursetype);
         $concat = $DB->sql_concat('r.name', "' → '", 'rc.name');
@@ -69,8 +72,9 @@ class course_overview_table extends \table_sql {
             "rc.id, {$concat} AS directionname, c.id AS courseid, c.fullname AS coursename",
             "{local_recruitment_course} rc
              JOIN {local_recruitment} r ON r.id = rc.recruitmentid
-             JOIN {course} c ON c.id = rc.{$coursecol}",
-            "rc.{$coursecol} IS NOT NULL"
+             JOIN {course} c ON c.id = rc.{$coursecol}
+             JOIN {course_categories} ccat ON ccat.id = c.category",
+            "rc.{$coursecol} IS NOT NULL AND ccat.visible = 1"
         );
     }
 
@@ -111,5 +115,23 @@ class course_overview_table extends \table_sql {
         }
         $url = new \moodle_url('/course/view.php', ['id' => $row->courseid]);
         return \html_writer::link($url, format_string($row->coursename));
+    }
+
+    /**
+     * Render the results column with a button linking to the progress report.
+     *
+     * @param \stdClass $row
+     * @return string
+     */
+    public function col_wyniki(\stdClass $row): string {
+        if (empty($row->courseid)) {
+            return '-';
+        }
+        $url = new \moodle_url('/report/progress/index.php', ['course' => $row->courseid]);
+        return \html_writer::link(
+            $url,
+            get_string('progressreport_btn', 'local_recruitment'),
+            ['class' => 'btn btn-sm btn-primary']
+        );
     }
 }

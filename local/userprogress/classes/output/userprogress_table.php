@@ -51,6 +51,7 @@ class userprogress_table extends table_sql {
             'lastname',
             'email',
             'directionname',
+            'coursename',
             'archive_percent',
             'modules_percent',
             'test_status',
@@ -62,6 +63,7 @@ class userprogress_table extends table_sql {
             get_string('lastname', 'local_userprogress'),
             get_string('email', 'local_userprogress'),
             get_string('recruitment', 'local_userprogress'),
+            get_string('coursename', 'local_userprogress'),
             get_string('archivepercent', 'local_userprogress'),
             get_string('modulespercent', 'local_userprogress'),
             get_string('teststatus', 'local_userprogress'),
@@ -142,6 +144,7 @@ class userprogress_table extends table_sql {
 
         $fields = "cm.id, u.id AS userid, u.firstname, u.lastname, u.email,
                    rc.id AS directionid,
+                   rc.name AS coursename,
                    rc.archive_course, rc.preparation_course, rc.quizes_course,
                    {$concat_direction} AS directionname,
                    {$archive_sub} AS archive_percent,
@@ -177,6 +180,11 @@ class userprogress_table extends table_sql {
             $params['rid'] = $filters['recruitmentid'];
         }
 
+        if (!empty($filters['directionid'])) {
+            $where .= " AND rc.id = :directionid";
+            $params['directionid'] = $filters['directionid'];
+        }
+
         $this->set_sql($fields, $from, $where, $params);
         $this->set_count_sql(
             "SELECT COUNT(cm.id)
@@ -187,6 +195,46 @@ class userprogress_table extends table_sql {
               WHERE {$where}",
             $params
         );
+    }
+
+    /**
+     * Build URL to the internal test results for a given user and direction.
+     *
+     * @param \stdClass $row
+     * @return string Empty string when quizes_course is not set.
+     */
+    protected function get_row_url(\stdClass $row): string {
+        if (empty($row->quizes_course)) {
+            return '';
+        }
+        return (new moodle_url('/course/user.php', [
+            'mode' => 'grade',
+            'id'   => $row->quizes_course,
+            'user' => $row->userid,
+        ]))->out(false);
+    }
+
+    /**
+     * Render first name column. Embeds a hidden span carrying the row link URL
+     * so that JavaScript in index.php can make the entire row clickable.
+     *
+     * @param \stdClass $row
+     * @return string
+     */
+    public function col_firstname($row): string {
+        $url = $this->get_row_url($row);
+        $href = $url ? '<span class="row-href d-none" data-href="' . $url . '"></span>' : '';
+        return s($row->firstname) . $href;
+    }
+
+    /**
+     * Render course (direction) name column.
+     *
+     * @param \stdClass $row
+     * @return string
+     */
+    public function col_coursename($row): string {
+        return s($row->coursename);
     }
 
     /**

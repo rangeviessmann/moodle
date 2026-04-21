@@ -34,6 +34,7 @@ $firstname = optional_param('firstname', '', PARAM_TEXT);
 $lastname = optional_param('lastname', '', PARAM_TEXT);
 $email = optional_param('email', '', PARAM_TEXT);
 $recruitmentid = optional_param('recruitmentid', 0, PARAM_INT);
+$directionid = optional_param('directionid', 0, PARAM_INT);
 $resetfilters = optional_param('resetfilters', 0, PARAM_INT);
 
 if ($resetfilters) {
@@ -41,6 +42,7 @@ if ($resetfilters) {
     $lastname = '';
     $email = '';
     $recruitmentid = 0;
+    $directionid = 0;
 }
 
 $baseurl = new moodle_url('/local/userprogress/index.php', [
@@ -48,6 +50,7 @@ $baseurl = new moodle_url('/local/userprogress/index.php', [
     'lastname' => $lastname,
     'email' => $email,
     'recruitmentid' => $recruitmentid,
+    'directionid' => $directionid,
 ]);
 
 $PAGE->set_url($baseurl);
@@ -66,6 +69,16 @@ foreach ($recruitmentoptions as $key => $value) {
     $selectoptions[] = ['value' => $key, 'label' => s($value), 'selected' => ($key == $recruitmentid)];
 }
 
+// Direction options filtered by selected recruitment.
+$directionconditions = $recruitmentid ? ['recruitmentid' => $recruitmentid] : [];
+$directions = $DB->get_records_menu('local_recruitment_course', $directionconditions, 'name ASC', 'id, name');
+$directionoptions = [0 => get_string('allcourses', 'local_userprogress')] + $directions;
+
+$directionselect = [];
+foreach ($directionoptions as $key => $value) {
+    $directionselect[] = ['value' => $key, 'label' => s($value), 'selected' => ($key == $directionid)];
+}
+
 $filterdata = [
     'actionurl' => (new moodle_url('/local/userprogress/index.php'))->out(false),
     'reseturl' => (new moodle_url('/local/userprogress/index.php', ['resetfilters' => 1]))->out(false),
@@ -76,6 +89,7 @@ $filterdata = [
     ],
     'selects' => [
         ['id' => 'filter-recruitment', 'name' => 'recruitmentid', 'label' => get_string('filterrecruitment', 'local_userprogress'), 'options' => $selectoptions],
+        ['id' => 'filter-direction', 'name' => 'directionid', 'label' => get_string('filtercourse', 'local_userprogress'), 'options' => $directionselect],
     ],
     'str_filter' => get_string('filter', 'local_userprogress'),
     'str_reset' => get_string('resetfilters', 'local_userprogress'),
@@ -96,9 +110,27 @@ if (!empty($email)) {
 if (!empty($recruitmentid)) {
     $filters['recruitmentid'] = $recruitmentid;
 }
+if (!empty($directionid)) {
+    $filters['directionid'] = $directionid;
+}
 
 $table = new \local_userprogress\output\userprogress_table('userprogress_report', $baseurl, $filters);
 $table->pagesize(25, 0);
 $table->out(25, true);
+
+// Make table rows clickable — each row carries a data-href set by the table class.
+echo html_writer::script("
+(function() {
+    document.querySelectorAll('#userprogress_report tbody tr').forEach(function(tr) {
+        var span = tr.querySelector('.row-href');
+        if (!span) return;
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') return;
+            window.location.href = span.dataset.href;
+        });
+    });
+})();
+");
 
 echo $OUTPUT->footer();
