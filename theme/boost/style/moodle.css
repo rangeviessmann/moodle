@@ -28051,7 +28051,7 @@ input[disabled] {
     justify-content: center;
   }
   .card .card-body {
-    padding: 0.5rem;
+    /*padding: 0.5rem;*/
   }
   #page-header .card {
     border: 0;

@@ -28,9 +28,7 @@ require_once($CFG->libdir . '/behat/lib.php');
 
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
-var_dump('fffff');
-var_dump($SESSION->active_direction_id);
-exit;
+
 $extraclasses = [];
 if(is_siteadmin()){
     $extraclasses[] = 'admin-view';

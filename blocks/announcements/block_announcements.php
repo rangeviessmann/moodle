@@ -47,6 +47,21 @@ class block_announcements extends block_base {
         // Get active direction ID from session.
         $directionid = !empty($SESSION->active_direction_id) ? (int)$SESSION->active_direction_id : 0;
 
+        // If session not yet populated (e.g. first request after login), try to resolve it.
+        if (!$directionid && !$isadmin) {
+            global $USER;
+            try {
+                $directions = \local_recruitment\recruitment::get_user_directions((int)$USER->id);
+            } catch (\Exception $e) {
+                $directions = [];
+            }
+            if (count($directions) === 1) {
+                $first = reset($directions);
+                $SESSION->active_direction_id = $first->id;
+                $directionid = (int)$first->id;
+            }
+        }
+
         if (!$directionid && !$isadmin) {
             $this->content->text = get_string('noactiverecruitment', 'block_announcements');
             return $this->content;

@@ -3,7 +3,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  #user-menu-toggle .userbutton {
+  #user-menu-toggle .userbutton .usertext {
     display: none !important;
   }
 }
@@ -160,6 +160,10 @@ div[role="main"] {
 
 .drawer-toggles {
   display: none !important;
+}
+
+#page{
+  padding: 0 15px;
 }
 
 #page-local-dashboard-index {
@@ -589,7 +593,6 @@ body[id^="page-admin-local-"] {
     display: none !important;
   }
 }
-
 #page-mod-assign-editsubmission,
 #page-mod-assign-view {
   #region-main {

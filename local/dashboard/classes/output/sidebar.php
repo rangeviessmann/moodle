@@ -89,7 +89,7 @@ class sidebar implements renderable, templatable {
                 [
                     'key' => 'dashboard',
                     'text' => get_string('dashboard', 'local_dashboard'),
-                    'icon' => 'fa-gauge-high',
+                    'icon' => 'fa-bullhorn',
                     'url' => (new \moodle_url('/my/'))->out(false),
                 ],
                 [

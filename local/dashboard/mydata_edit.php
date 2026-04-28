@@ -45,8 +45,8 @@ if ($form->is_cancelled()) {
 } else if ($data = $form->get_data()) {
     $updateuser = new stdClass();
     $updateuser->id = $USER->id;
-    $updateuser->email = trim($data->email);
-    $updateuser->phone1 = trim($data->phone1);
+    $updateuser->email = clean_param(trim($data->email), PARAM_EMAIL);
+    $updateuser->phone1 = clean_param(trim($data->phone1), PARAM_TEXT);
     $updateuser->timemodified = time();
 
     $DB->update_record('user', $updateuser);

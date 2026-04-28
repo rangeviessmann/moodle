@@ -88,3 +88,4 @@ $string['direction'] = 'Course (direction)';
 $string['archives_overview'] = 'Lecture Archives';
 $string['preparation_overview'] = 'Exam Preparation';
 $string['internaltests_overview'] = 'Internal Tests';
+$string['invalidphone'] = 'Please enter a valid phone number (digits, spaces, +, -, brackets, 7–20 characters).';

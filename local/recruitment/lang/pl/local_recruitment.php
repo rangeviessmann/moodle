@@ -106,7 +106,7 @@ Zaloguj się do platformy: {$a->loginurl}<br>
 Zalecamy zmianę hasła po pierwszym logowaniu.';
 $string['archives_overview'] = 'Archiwum wykładów';
 $string['preparation_overview'] = 'Przygotowanie do egzaminu';
-$string['internaltests_overview'] = 'Testy wewnętrzne';
+$string['internaltests_overview'] = 'Zaliczenia';
 $string['basecourse'] = 'Kurs bazowy';
 $string['basecourse_label'] = 'Kurs bazowy';
 $string['basecourses'] = 'Kursy bazowe';

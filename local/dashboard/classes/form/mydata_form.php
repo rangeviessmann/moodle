@@ -37,10 +37,10 @@ class mydata_form extends \moodleform {
         $mform = $this->_form;
 
         $mform->addElement('text', 'email', get_string('email'), ['size' => 40]);
-        $mform->setType('email', PARAM_EMAIL);
+        $mform->setType('email', PARAM_RAW);
 
         $mform->addElement('text', 'phone1', get_string('phone', 'local_dashboard'), ['size' => 20]);
-        $mform->setType('phone1', PARAM_TEXT);
+        $mform->setType('phone1', PARAM_RAW);
 
         $this->add_action_buttons(true, get_string('savechanges'));
     }
@@ -52,20 +52,26 @@ class mydata_form extends \moodleform {
 
         // Email validation.
         $email = trim($data['email']);
-        if (!empty($email)) {
-            if (!validate_email($email)) {
-                $errors['email'] = get_string('invalidemail');
-            } else if (empty($CFG->allowaccountssameemail)) {
-                $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid AND id <> :userid';
-                $params = [
-                    'email' => $email,
-                    'mnethostid' => $CFG->mnet_localhost_id,
-                    'userid' => $USER->id,
-                ];
-                if ($DB->record_exists_select('user', $select, $params)) {
-                    $errors['email'] = get_string('emailexists');
-                }
+        if (empty($email)) {
+            $errors['email'] = get_string('required');
+        } else if (!validate_email($email)) {
+            $errors['email'] = get_string('invalidemail');
+        } else if (empty($CFG->allowaccountssameemail)) {
+            $select = $DB->sql_equal('email', ':email', false) . ' AND mnethostid = :mnethostid AND id <> :userid';
+            $params = [
+                'email' => $email,
+                'mnethostid' => $CFG->mnet_localhost_id,
+                'userid' => $USER->id,
+            ];
+            if ($DB->record_exists_select('user', $select, $params)) {
+                $errors['email'] = get_string('emailexists');
             }
+        }
+
+        // Phone validation — digits, spaces, +, -, (), 7–20 chars.
+        $phone = trim($data['phone1']);
+        if (!empty($phone) && !preg_match('/^[\d\s\+\-\(\)]{7,20}$/', $phone)) {
+            $errors['phone1'] = get_string('invalidphone', 'local_dashboard');
         }
 
         return $errors;

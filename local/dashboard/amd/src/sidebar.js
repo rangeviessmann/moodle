@@ -77,6 +77,30 @@ define(['jquery'], function($) {
         drawerContent.appendChild(section);
     };
 
+    /**
+     * Disable the Bootstrap tooltip on the primary drawer close button.
+     * The tooltip misbehaves on mobile: shows immediately on open and lingers after close.
+     */
+    var disableDrawerCloseTooltip = function() {
+        var btn = document.querySelector(
+            '[data-action="closedrawer"][data-target="theme_boost-drawers-primary"]'
+        );
+        if (!btn) {
+            return;
+        }
+        // Remove attributes that Bootstrap uses to initialise / show the tooltip.
+        btn.removeAttribute('data-bs-original-title');
+        btn.removeAttribute('title');
+        btn.setAttribute('data-bs-toggle', '');
+        // Destroy existing Bootstrap 5 tooltip instance if already created.
+        if (window.bootstrap && window.bootstrap.Tooltip) {
+            var instance = window.bootstrap.Tooltip.getInstance(btn);
+            if (instance) {
+                instance.dispose();
+            }
+        }
+    };
+
     return {
         /**
          * Initialize the sidebar.
@@ -84,6 +108,7 @@ define(['jquery'], function($) {
         init: function() {
             // Mobile: inject into Boost drawer.
             injectIntoBoostDrawer();
+            disableDrawerCloseTooltip();
         }
     };
 });
