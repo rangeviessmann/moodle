@@ -23,9 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-var_dump('fffff');
-var_dump($SESSION->active_direction_id);
-exit;
 $extraclasses = [];
 if(is_siteadmin()){
     $extraclasses[] = 'admin-view';
