@@ -47,7 +47,7 @@ class quizaccess_internaltest extends access_rule_base {
                 $DB->update_record('quizaccess_internaltest', $record);
             } else {
                 $DB->insert_record('quizaccess_internaltest', (object)[
-                    'quizid' => $quiz->id,
+                    'quizid'       => $quiz->id,
                     'internaltest' => 1,
                 ]);
             }

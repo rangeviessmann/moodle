@@ -69,10 +69,10 @@ class send_notifications extends \core\task\scheduled_task {
                 continue;
             }
 
-            // Check each notification type.
+            // Each notification type checks only its own date independently.
             $notifications = [];
 
-            // 7 days before open.
+            // 7 days before open — requires only 'from' date.
             if ($dates['from']) {
                 $sevendays = $dates['from'] - (7 * DAYSECS);
                 if ($now >= $sevendays && $now < $dates['from']) {
@@ -80,12 +80,12 @@ class send_notifications extends \core\task\scheduled_task {
                 }
             }
 
-            // On open.
+            // On open — requires only 'from' date.
             if ($dates['from'] && $now >= $dates['from']) {
                 $notifications[] = 'on_open';
             }
 
-            // 24h before close.
+            // 24h before close — requires only 'until' date.
             if ($dates['until']) {
                 $onedaybefore = $dates['until'] - DAYSECS;
                 if ($now >= $onedaybefore && $now < $dates['until']) {
@@ -96,7 +96,7 @@ class send_notifications extends \core\task\scheduled_task {
             foreach ($notifications as $notiftype) {
                 // Check if already sent.
                 if ($DB->record_exists('quizaccess_inttest_notif', [
-                    'quizid' => $quiz->id,
+                    'quizid'    => $quiz->id,
                     'notiftype' => $notiftype,
                 ])) {
                     continue;
@@ -113,9 +113,9 @@ class send_notifications extends \core\task\scheduled_task {
 
                 // Record that notification was sent.
                 $DB->insert_record('quizaccess_inttest_notif', (object)[
-                    'quizid' => $quiz->id,
+                    'quizid'    => $quiz->id,
                     'notiftype' => $notiftype,
-                    'timesent' => $now,
+                    'timesent'  => $now,
                 ]);
 
                 mtrace("  Internal test notification '{$notiftype}' sent for quiz {$quiz->id} ({$quiz->name})");

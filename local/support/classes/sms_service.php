@@ -113,11 +113,9 @@ class sms_service {
                 'component' => $component,
                 'success' => $success,
                 'message' => mb_substr($text, 0, 200),
+                'relatedid' => $relatedid,
             ],
         ];
-        if ($relatedid) {
-            $eventdata['objectid'] = $relatedid;
-        }
         $event = \local_support\event\sms_sent::create($eventdata);
         $event->trigger();
 
