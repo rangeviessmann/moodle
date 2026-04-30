@@ -308,9 +308,21 @@ div[role="main"] {
   }
 }
 
+#page-mod-quiz-summary{
+  .tertiary-navigation{
+    .navitem{
+      margin-left: 10px;
+    }
+  }
+}
+
 #page-mod-quiz-view {
   #region-main {
     background-color: #f7f7f7;
+
+    .automatic-completion-conditions{
+      display: none !important;
+    }
 
     div[role="main"] {
       .mb-3 {
@@ -601,5 +613,22 @@ body[id^="page-admin-local-"] {
     .activity-header {
       background-color: #f7f7f7 !important;
     }
+  }
+}
+
+#page-mod-assign-grader{
+  .embedded-main{
+    box-shadow: none !important;
+  }
+  div[data-region="grading-navigation-panel"]{
+    top: 100px;
+    left: 260px;
+    width: calc(100% - 260px);
+    border: none !important;
+  }
+  div[data-region="grade-panel"]{
+    left: 260px;
+    width: calc(100% - 260px);
+    top: 200px;
   }
 }

@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Ogłoszenia';
 $string['announcements:addinstance'] = 'Dodaj nowy blok Ogłoszenia';
 $string['announcements:myaddinstance'] = 'Dodaj nowy blok Ogłoszenia do Kokpitu';
-$string['noactiverecruitment'] = 'Nie wybrano aktywnej rekrutacji.';
+$string['noactiverecruitment'] = 'Nie masz obecnie dostępu do żadnego kursu.';
 $string['noannouncements'] = 'Brak dostępnych ogłoszeń.';
 $string['enter'] = 'Wejdź';
 $string['attachmentscount'] = 'Dodane załączniki: {$a}';

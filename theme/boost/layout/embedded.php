@@ -28,11 +28,18 @@ $fakeblockshtml = $OUTPUT->blocks('side-pre', array(), 'aside', true);
 $hasfakeblocks = strpos($fakeblockshtml, 'data-block="_fake"') !== false;
 $renderer = $PAGE->get_renderer('core');
 
+$primary = new core\navigation\output\primary($PAGE);
+$primarymenu = $primary->export_for_template($renderer);
+
 $templatecontext = [
     'output' => $OUTPUT,
     'headercontent' => $PAGE->activityheader->export_for_template($renderer),
     'hasfakeblocks' => $hasfakeblocks,
     'fakeblocks' => $fakeblockshtml,
+    'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), 'escape' => false]),
+    'mobileprimarynav' => $primarymenu['mobileprimarynav'],
+    'usermenu' => $primarymenu['user'],
+    'langmenu' => $primarymenu['lang'],
 ];
 
 echo $OUTPUT->render_from_template('theme_boost/embedded', $templatecontext);

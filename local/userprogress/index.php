@@ -118,12 +118,12 @@ $table = new \local_userprogress\output\userprogress_table('userprogress_report'
 $table->pagesize(25, 0);
 $table->out(25, true);
 
-// Make table rows clickable — each row carries a data-href set by the table class.
+// Make table rows clickable — find rows via the embedded .row-href span.
 echo html_writer::script("
 (function() {
-    document.querySelectorAll('#userprogress_report tbody tr').forEach(function(tr) {
-        var span = tr.querySelector('.row-href');
-        if (!span) return;
+    document.querySelectorAll('.row-href[data-href]').forEach(function(span) {
+        var tr = span.closest('tr');
+        if (!tr) return;
         tr.style.cursor = 'pointer';
         tr.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') return;

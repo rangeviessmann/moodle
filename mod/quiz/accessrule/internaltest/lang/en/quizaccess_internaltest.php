@@ -24,21 +24,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Internal test';
-$string['internaltest'] = 'Internal test';
-$string['internaltest_help'] = 'When enabled, quiz responses are extracted as JSON after submission. Email notifications are sent to enrolled users before the test opens and closes.';
-$string['privacy:metadata:quizaccess_inttest_results'] = 'Stores JSON data with user quiz responses for internal tests.';
+$string['pluginname'] = 'Credits';
+$string['internaltest'] = 'Internal credit';
+$string['internaltest_help'] = 'When enabled, quiz responses are extracted as JSON after submission. Email notifications are sent to enrolled users before the credit opens and closes.';
+$string['privacy:metadata:quizaccess_inttest_results'] = 'Stores JSON data with user quiz responses for internal credits.';
 $string['privacy:metadata:quizaccess_inttest_results:userid'] = 'The ID of the user who submitted the attempt.';
 $string['privacy:metadata:quizaccess_inttest_results:jsondata'] = 'JSON data containing questions and user answers.';
 $string['privacy:metadata:quizaccess_inttest_results:timecreated'] = 'The time the result was recorded.';
-$string['messageprovider:internaltest_reminder'] = 'Internal test reminders';
-$string['notification_subject_7days'] = 'Internal test "{$a->quizname}" opens in 7 days';
-$string['notification_subject_open'] = 'Internal test "{$a->quizname}" is now available';
-$string['notification_subject_closing'] = 'Internal test "{$a->quizname}" closes in 24 hours';
-$string['notification_body_7days'] = 'The internal test "{$a->quizname}" in course "{$a->coursename}" will open in 7 days ({$a->opendate}). Please prepare accordingly.';
-$string['notification_body_open'] = 'The internal test "{$a->quizname}" in course "{$a->coursename}" is now available. You can start the test at: {$a->url}';
-$string['notification_body_closing'] = 'The internal test "{$a->quizname}" in course "{$a->coursename}" closes in 24 hours ({$a->closedate}). Please complete it before the deadline.';
-$string['taskname'] = 'Send internal test notifications';
-$string['sms_7days'] = 'Test "{$a->quizname}" ({$a->coursename}) opens on {$a->opendate}. Please prepare.';
-$string['sms_open'] = 'Test "{$a->quizname}" ({$a->coursename}) is now available. Log in to start.';
-$string['sms_closing'] = 'Test "{$a->quizname}" ({$a->coursename}) closes on {$a->closedate}. Complete it before the deadline.';
+$string['messageprovider:internaltest_reminder'] = 'Credit reminders';
+$string['notification_subject_7days'] = 'Credit "{$a->quizname}" opens in 7 days';
+$string['notification_subject_open'] = 'Credit "{$a->quizname}" is now available';
+$string['notification_subject_closing'] = 'Credit "{$a->quizname}" closes in 24 hours';
+$string['notification_body_7days'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" will open in 7 days ({$a->opendate}). Please prepare accordingly.';
+$string['notification_body_open'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" is now available. You can start it at: {$a->url}';
+$string['notification_body_closing'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" closes in 24 hours ({$a->closedate}). Please complete it before the deadline.';
+$string['taskname'] = 'Send credit notifications';
+$string['sms_7days'] = 'Credit "{$a->quizname}" ({$a->coursename}) opens on {$a->opendate}. Please prepare.';
+$string['sms_open'] = 'Credit "{$a->quizname}" ({$a->coursename}) is now available. Log in to start.';
+$string['sms_closing'] = 'Credit "{$a->quizname}" ({$a->coursename}) closes on {$a->closedate}. Complete it before the deadline.';
