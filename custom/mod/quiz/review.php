@@ -162,16 +162,15 @@ if (!empty($returnurl)) {
     );
 }
 
-// Training mode: replace scaled "Ocena" row with raw score / number of questions.
-if (!empty($quiz->training)) {
-    $js = <<<'JS'
+// Replace scaled "Ocena" row with raw score / number of questions (integer display).
+$js = <<<'JS'
 (function(){
-    var table=document.querySelector(".quizreviewsummary");
+    var table=document.querySelector("table.quizreviewsummary");
     if(!table)return;
     var rawScore=null,maxScore=null,gradeCell=null;
     table.querySelectorAll("tr").forEach(function(row){
-        var th=row.querySelector("th");
-        var td=row.querySelector("td");
+        var th=row.querySelector("th.cell");
+        var td=row.querySelector("td.cell");
         if(!th||!td)return;
         var label=th.textContent.trim();
         if(label==="Punkty"||label==="Marks"){
@@ -188,8 +187,7 @@ if (!empty($quiz->training)) {
     }
 })();
 JS;
-    $PAGE->requires->js_init_code($js, true);
-}
+$PAGE->requires->js_init_code($js, true);
 
 echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata);
 
