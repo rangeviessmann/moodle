@@ -27,6 +27,7 @@
  */
 
 use mod_quiz\output\attempt_summary_information;
+use mod_quiz\output\grades\grade_out_of;
 use mod_quiz\output\navigation_panel_review;
 use mod_quiz\output\renderer;
 use mod_quiz\quiz_attempt;
@@ -136,6 +137,18 @@ $PAGE->activityheader->disable();
 
 $summarydata = attempt_summary_information::create_for_attempt($attemptobj, $options, $page, $showall);
 
+// Replace scaled grade row with raw marks / sumgrades so "Ocena" shows e.g. "1,00 pkt. na 20,00 pkt. możliwych (5%)".
+$rawmarks = $attemptobj->get_sum_marks();
+if (!is_null($rawmarks) && $quiz->grade != $quiz->sumgrades) {
+    $summarydata->remove_item('grade');
+    $summarydata->add_item_after(
+        'grade',
+        get_string('gradenoun'),
+        new grade_out_of($quiz, $rawmarks, $quiz->sumgrades, style: grade_out_of::WITH_PERCENT),
+        'marks'
+    );
+}
+
 if ($showall) {
     $slots = $attemptobj->get_slots();
     $lastpage = true;
@@ -161,33 +174,6 @@ if (!empty($returnurl)) {
         true
     );
 }
-
-// Replace scaled "Ocena" row with raw score / number of questions (integer display).
-$js = <<<'JS'
-(function(){
-    var table=document.querySelector("table.quizreviewsummary");
-    if(!table)return;
-    var rawScore=null,maxScore=null,gradeCell=null;
-    table.querySelectorAll("tr").forEach(function(row){
-        var th=row.querySelector("th.cell");
-        var td=row.querySelector("td.cell");
-        if(!th||!td)return;
-        var label=th.textContent.trim();
-        if(label==="Punkty"||label==="Marks"){
-            var m=td.textContent.trim().match(/([\d,]+)\/([\d,]+)/);
-            if(m){
-                rawScore=Math.round(parseFloat(m[1].replace(",",".")));
-                maxScore=Math.round(parseFloat(m[2].replace(",",".")));
-            }
-        }
-        if(label==="Ocena"||label==="Grade"){gradeCell=td;}
-    });
-    if(gradeCell&&rawScore!==null&&maxScore!==null){
-        gradeCell.textContent=rawScore+" pkt na "+maxScore+" możliwych";
-    }
-})();
-JS;
-$PAGE->requires->js_init_code($js, true);
 
 echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata);
 
