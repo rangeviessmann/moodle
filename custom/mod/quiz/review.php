@@ -162,6 +162,35 @@ if (!empty($returnurl)) {
     );
 }
 
+// Training mode: replace scaled "Ocena" row with raw score / number of questions.
+if (!empty($quiz->training)) {
+    $js = <<<'JS'
+(function(){
+    var table=document.querySelector(".quizreviewsummary");
+    if(!table)return;
+    var rawScore=null,maxScore=null,gradeCell=null;
+    table.querySelectorAll("tr").forEach(function(row){
+        var th=row.querySelector("th");
+        var td=row.querySelector("td");
+        if(!th||!td)return;
+        var label=th.textContent.trim();
+        if(label==="Punkty"||label==="Marks"){
+            var m=td.textContent.trim().match(/([\d,]+)\/([\d,]+)/);
+            if(m){
+                rawScore=Math.round(parseFloat(m[1].replace(",",".")));
+                maxScore=Math.round(parseFloat(m[2].replace(",",".")));
+            }
+        }
+        if(label==="Ocena"||label==="Grade"){gradeCell=td;}
+    });
+    if(gradeCell&&rawScore!==null&&maxScore!==null){
+        gradeCell.textContent=rawScore+" pkt na "+maxScore+" możliwych";
+    }
+})();
+JS;
+    $PAGE->requires->js_init_code($js, true);
+}
+
 echo $output->review_page($attemptobj, $slots, $page, $showall, $lastpage, $options, $summarydata);
 
 // Trigger an event for this review.
