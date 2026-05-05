@@ -451,7 +451,6 @@ function xmldb_local_recruitment_upgrade($oldversion) {
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('quizid_fk', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
         $table->add_index('quizid_uq', XMLDB_INDEX_UNIQUE, ['quizid']);
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);

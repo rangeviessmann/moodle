@@ -79,7 +79,6 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="quizid_fk" TYPE="foreign" FIELDS="quizid" REFTABLE="quiz" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="quizid_uq" UNIQUE="true" FIELDS="quizid"/>
