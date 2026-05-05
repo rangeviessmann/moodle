@@ -631,6 +631,10 @@ body[id^="page-admin-local-"] {
     width: calc(100% - 260px);
     top: 200px;
   }
+  div[data-region="review-panel"],
+  div[data-region="resizer"] {
+    display: none !important;
+  }
 }
 
 .generaltable{

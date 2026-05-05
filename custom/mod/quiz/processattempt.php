@@ -81,10 +81,9 @@ if ($attemptobj->is_finished()) {
     throw new moodle_exception('attemptalreadyclosed', 'quiz', $attemptobj->view_url());
 }
 
-// If this page cannot be accessed, notify user and send them to the correct page.
+// If this page cannot be accessed, silently redirect to the correct page (no confusing error shown).
 if (!$finishattempt && !$attemptobj->check_page_access($thispage)) {
-    throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question',
-            $attemptobj->attempt_url(null, $attemptobj->get_currentpage()));
+    redirect($attemptobj->attempt_url(null, $attemptobj->get_currentpage()));
 }
 
 // Process the attempt, getting the new status for the attempt.

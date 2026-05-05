@@ -432,5 +432,48 @@ function xmldb_local_recruitment_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026031601, 'local', 'recruitment');
     }
 
+    if ($oldversion < 2026050501) {
+        // Store the fixed cutoff date for the resend_account_emails cron task.
+        // Only users created on or after 2026-05-05 00:00:00 will be targeted.
+        if (!get_config('local_recruitment', 'account_email_since')) {
+            set_config('account_email_since', mktime(0, 0, 0, 5, 5, 2026), 'local_recruitment');
+        }
+
+        upgrade_plugin_savepoint(true, 2026050501, 'local', 'recruitment');
+    }
+
+    if ($oldversion < 2026050502) {
+        // Create local_recruitment_quiz_settings table.
+        $table = new xmldb_table('local_recruitment_quiz_settings');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('send_notifications', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('quizid_fk', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table->add_index('quizid_uq', XMLDB_INDEX_UNIQUE, ['quizid']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Create local_recruitment_quiz_notified table.
+        $table2 = new xmldb_table('local_recruitment_quiz_notified');
+        $table2->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table2->add_field('quizid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table2->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table2->add_field('type', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table2->add_field('timesent', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table2->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table2->add_key('quizid_fk', XMLDB_KEY_FOREIGN, ['quizid'], 'quiz', ['id']);
+        $table2->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table2->add_index('quizid_userid_type_uq', XMLDB_INDEX_UNIQUE, ['quizid', 'userid', 'type']);
+        if (!$dbman->table_exists($table2)) {
+            $dbman->create_table($table2);
+        }
+
+        upgrade_plugin_savepoint(true, 2026050502, 'local', 'recruitment');
+    }
+
     return true;
 }

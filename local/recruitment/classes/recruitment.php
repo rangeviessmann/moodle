@@ -723,22 +723,26 @@ class recruitment {
 
     /**
      * Send email with account credentials to a newly created user.
+     * Uses email_to_user() directly for reliable synchronous delivery and logs to local_mail_history.
      *
      * @param \stdClass $user The user record.
      * @param string $plainpassword The plain text password.
+     * @return bool True if the email was sent successfully.
      */
-    private static function send_new_account_email(\stdClass $user, string $plainpassword): void {
+    public static function send_new_account_email(\stdClass $user, string $plainpassword): bool {
+        global $DB;
+
         $loginurl = (new \moodle_url('/login/index.php'))->out(false);
 
         $a = (object)[
             'firstname' => $user->firstname,
-            'lastname' => $user->lastname,
-            'username' => $user->username,
-            'password' => $plainpassword,
-            'loginurl' => $loginurl,
+            'lastname'  => $user->lastname,
+            'username'  => $user->username,
+            'password'  => $plainpassword,
+            'loginurl'  => $loginurl,
         ];
 
-        $subject = get_string('newaccountsubject', 'local_recruitment');
+        $subject     = get_string('newaccountsubject', 'local_recruitment');
         $messagetext = get_string('newaccountbody', 'local_recruitment', $a);
 
         $ahtml = clone $a;
@@ -747,22 +751,24 @@ class recruitment {
 
         $noreplyuser = \core_user::get_noreply_user();
 
-        $message = new \core\message\message();
-        $message->component = 'local_recruitment';
-        $message->name = 'exam_registration';
-        $message->userfrom = $noreplyuser;
-        $message->userto = $user;
-        $message->subject = $subject;
-        $message->fullmessage = $messagetext;
-        $message->fullmessageformat = FORMAT_PLAIN;
-        $message->fullmessagehtml = $messagehtml;
-        $message->smallmessage = $subject;
-        $message->notification = 1;
-
         try {
-            message_send($message);
+            $sent = email_to_user($user, $noreplyuser, $subject, $messagetext, $messagehtml);
         } catch (\Exception $e) {
             mtrace('Failed to send new account email to user ' . $user->id . ': ' . $e->getMessage());
+            return false;
         }
+
+        if ($sent) {
+            $DB->insert_record('local_mail_history', (object)[
+                'userid'      => $user->id,
+                'email'       => $user->email,
+                'subject'     => $subject,
+                'message'     => $messagehtml,
+                'timecreated' => time(),
+                'usercreated' => 0,
+            ]);
+        }
+
+        return (bool) $sent;
     }
 }
