@@ -48,6 +48,7 @@ function local_recruitment_coursemodule_standard_elements($formwrapper, $mform) 
         }
     }
 
+    $mform->closeHeaderBefore('local_recruitment_send_notifications');
     $mform->addElement(
         'checkbox',
         'local_recruitment_send_notifications',

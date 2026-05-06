@@ -122,13 +122,17 @@ $string['task_resend_account_emails'] = 'Resend account credential emails';
 $string['task_send_quiz_notifications'] = 'Send quiz reminder notifications';
 $string['send_notifications'] = 'Send reminder notifications';
 $string['send_notifications_help'] = 'If checked, users will receive email notifications: 7 days before the quiz opens, when it opens, and 24 hours before it closes.';
-$string['notification_subject_7days'] = 'Quiz "{$a->quizname}" opens in 7 days';
-$string['notification_subject_open'] = 'Quiz "{$a->quizname}" is now available';
-$string['notification_subject_closing'] = 'Quiz "{$a->quizname}" closes in 24 hours';
-$string['notification_body_7days'] = 'Hello, the quiz "{$a->quizname}" in the {$a->direction} course (recruitment: {$a->recruitment}) will open on {$a->date}. Log in to the platform: {$a->loginurl}';
-$string['notification_body_open'] = 'Hello, the quiz "{$a->quizname}" in the {$a->direction} course (recruitment: {$a->recruitment}) is now available. Log in to the platform: {$a->loginurl}';
-$string['notification_body_closing'] = 'Hello, the quiz "{$a->quizname}" in the {$a->direction} course (recruitment: {$a->recruitment}) will close in 24 hours. Log in to the platform: {$a->loginurl}';
-$string['notification_sms_7days'] = 'Quiz "{$a->quizname}" opens in 7 days. Log in to the platform.';
-$string['notification_sms_open'] = 'Quiz "{$a->quizname}" is now available. Log in to the platform.';
-$string['notification_sms_closing'] = 'Quiz "{$a->quizname}" closes in 24 hours. Log in to the platform.';
+$string['notification_subject_7days'] = 'Internal tests will be available in 7 days';
+$string['notification_subject_open'] = 'Internal tests are now available';
+$string['notification_subject_closing'] = 'Internal tests will be available for 24 more hours';
+$string['notification_body_7days'] = 'Please be informed that the internal tests for the Vocational Qualification Course will be available in 7 days in your student panel. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
+$string['notification_body_open'] = 'Please be informed that the internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
+$string['notification_body_closing'] = 'Please be informed that the internal tests for the Vocational Qualification Course will be available in your student panel for 24 more hours. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
+$string['sms_7days'] = 'Internal tests for the Vocational Qualification Course will be available in 7 days. Log in: {$a->loginurl}';
+$string['sms_open'] = 'Internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl} Complete tests before {$a->closedate}';
+$string['sms_open_noclose'] = 'Internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl}';
+$string['sms_closing'] = 'Internal tests for the Vocational Qualification Course will be available for 24 more hours. Log in: {$a->loginurl}';
 $string['messageprovider:quiz_notification'] = 'Quiz reminder notification';

@@ -170,17 +170,31 @@ class send_quiz_notifications extends \core\task\scheduled_task {
         \stdClass $recruitment,
         string $type
     ): void {
+        global $DB;
+
         $loginurl = (new \moodle_url('/login/index.php'))->out(false);
 
+        // Passing grade from gradebook.
+        $gradeitem = $DB->get_record('grade_items', [
+            'itemtype'     => 'mod',
+            'itemmodule'   => 'quiz',
+            'iteminstance' => $quiz->id,
+        ], 'gradepass');
+        $gradepass = '';
+        if ($gradeitem && $gradeitem->gradepass > 0 && $quiz->grade > 0) {
+            $gradepass = round(($gradeitem->gradepass / $quiz->grade) * 100) . '%';
+        }
+
+        $dateformat = get_string('strftimerecentfull', 'langconfig');
+        $closedate  = $quiz->timeclose > 0 ? userdate($quiz->timeclose, $dateformat) : '';
+
         $a = (object) [
-            'quizname'   => $quiz->name,
-            'direction'  => $direction->name,
-            'recruitment'=> $recruitment->name,
-            'loginurl'   => $loginurl,
-            'date'       => userdate($quiz->timeopen),
+            'loginurl'  => $loginurl,
+            'closedate' => $closedate,
+            'gradepass' => $gradepass,
         ];
 
-        $subject  = get_string('notification_subject_' . $type, 'local_recruitment', $a);
+        $subject  = get_string('notification_subject_' . $type, 'local_recruitment');
         $bodytext = get_string('notification_body_' . $type, 'local_recruitment', $a);
 
         $ahtml = clone $a;
@@ -210,7 +224,12 @@ class send_quiz_notifications extends \core\task\scheduled_task {
         // SMS (optional — only if local_support is available).
         try {
             if (class_exists('\local_support\sms_service') && !empty($user->phone1)) {
-                $smstext = get_string('notification_sms_' . $type, 'local_recruitment', $a);
+                // For 'open' without a close date, use the variant without the deadline line.
+                $smskey = 'sms_' . $type;
+                if ($type === 'open' && $quiz->timeclose <= 0) {
+                    $smskey = 'sms_open_noclose';
+                }
+                $smstext = get_string($smskey, 'local_recruitment', $a);
                 \local_support\sms_service::send(
                     $user, $smstext, 'local_recruitment', 'quiz_notification_sms', (int) $quiz->id
                 );
