@@ -34,13 +34,4 @@ $tasks = [
         'month'      => '*',
         'dayofweek'  => '*',
     ],
-    [
-        'classname'  => \local_recruitment\task\send_quiz_notifications::class,
-        'blocking'   => 0,
-        'minute'     => '*',
-        'hour'       => '*',
-        'day'        => '*',
-        'month'      => '*',
-        'dayofweek'  => '*',
-    ],
 ];

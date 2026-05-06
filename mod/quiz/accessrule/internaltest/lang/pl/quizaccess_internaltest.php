@@ -32,13 +32,17 @@ $string['privacy:metadata:quizaccess_inttest_results:userid'] = 'ID użytkownika
 $string['privacy:metadata:quizaccess_inttest_results:jsondata'] = 'Dane JSON zawierające pytania i odpowiedzi użytkownika.';
 $string['privacy:metadata:quizaccess_inttest_results:timecreated'] = 'Czas zapisania wyniku.';
 $string['messageprovider:internaltest_reminder'] = 'Przypomnienia o zaliczeniach';
-$string['notification_subject_7days'] = 'Zaliczenie "{$a->quizname}" otwiera się za 7 dni';
-$string['notification_subject_open'] = 'Zaliczenie "{$a->quizname}" jest już dostępne';
-$string['notification_subject_closing'] = 'Zaliczenie "{$a->quizname}" zamyka się za 24 godziny';
-$string['notification_body_7days'] = 'Zaliczenie "{$a->quizname}" w kursie "{$a->coursename}" zostanie otwarte za 7 dni ({$a->opendate}). Proszę się odpowiednio przygotować.';
-$string['notification_body_open'] = 'Zaliczenie "{$a->quizname}" w kursie "{$a->coursename}" jest już dostępne. Możesz przystąpić do zaliczenia tutaj: {$a->url}';
-$string['notification_body_closing'] = 'Zaliczenie "{$a->quizname}" w kursie "{$a->coursename}" zamyka się za 24 godziny ({$a->closedate}). Proszę ukończyć je przed terminem.';
+$string['notification_subject_7days'] = 'Testy wewnętrzne będą dostępne za 7 dni';
+$string['notification_subject_open'] = 'Testy wewnętrzne są już dostępne';
+$string['notification_subject_closing'] = 'Testy wewnętrzne będą dostępne jeszcze przez 24 godziny';
+$string['notification_body_7days'] = 'Informujemy, że testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego będą dostępne za 7 dni w panelu słuchacza. Zaloguj się: {$a->loginurl}
+Testy są obowiązkowe dla wszystkich słuchaczy. Należy podejść do nich przed {$a->closedate} oraz uzyskać minimum {$a->gradepass}, aby zaliczyć kurs.';
+$string['notification_body_open'] = 'Informujemy, że testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego są już dostępne w panelu słuchacza. Zaloguj się: {$a->loginurl}
+Testy są obowiązkowe dla wszystkich słuchaczy. Należy podejść do nich przed {$a->closedate} oraz uzyskać minimum {$a->gradepass}, aby zaliczyć kurs.';
+$string['notification_body_closing'] = 'Informujemy, że testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego będą dostępne w panelu słuchacza jeszcze przez 24h. Zaloguj się: {$a->loginurl}
+Testy są obowiązkowe dla wszystkich słuchaczy. Należy podejść do nich przed {$a->closedate} oraz uzyskać minimum {$a->gradepass}, aby zaliczyć kurs.';
 $string['taskname'] = 'Wysyłanie powiadomień o zaliczeniach';
-$string['sms_7days'] = 'Zaliczenie "{$a->quizname}" ({$a->coursename}) otwiera sie {$a->opendate}. Prosimy o przygotowanie.';
-$string['sms_open'] = 'Zaliczenie "{$a->quizname}" ({$a->coursename}) jest juz dostepne. Zaloguj sie, aby rozpoczac.';
-$string['sms_closing'] = 'Zaliczenie "{$a->quizname}" ({$a->coursename}) zamyka sie {$a->closedate}. Prosimy o ukonczenie przed terminem.';
+$string['sms_7days'] = 'Testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego beda dostepne za 7 dni. Zaloguj sie: {$a->loginurl}';
+$string['sms_open'] = 'Testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego sa juz dostepne w panelu sluchacza. Zaloguj sie: {$a->loginurl} Zdaj testy przed {$a->closedate}';
+$string['sms_open_noclose'] = 'Testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego sa juz dostepne w panelu sluchacza. Zaloguj sie: {$a->loginurl}';
+$string['sms_closing'] = 'Testy wewnętrzne na zaliczenie Kwalifikacyjnego Kursu Zawodowego beda dostepne jeszcze przez 24h. Zaloguj sie: {$a->loginurl}';

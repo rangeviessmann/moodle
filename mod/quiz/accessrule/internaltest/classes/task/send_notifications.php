@@ -69,19 +69,26 @@ class send_notifications extends \core\task\scheduled_task {
                 continue;
             }
 
+            // Only send if "Send reminder notifications" checkbox is enabled for this quiz.
+            $notifsetting = $DB->get_record('local_recruitment_quiz_settings', ['quizid' => $quiz->id]);
+            if (!$notifsetting || empty($notifsetting->send_notifications)) {
+                continue;
+            }
+
             // Each notification type checks only its own date independently.
             $notifications = [];
 
-            // 7 days before open — requires only 'from' date.
+            // 7 days before open — only if quiz opens in ≥ 6 days (avoids sending stale notice).
             if ($dates['from']) {
                 $sevendays = $dates['from'] - (7 * DAYSECS);
-                if ($now >= $sevendays && $now < $dates['from']) {
+                $remaining = $dates['from'] - $now;
+                if ($now >= $sevendays && $remaining >= 6 * DAYSECS) {
                     $notifications[] = '7days_before';
                 }
             }
 
-            // On open — requires only 'from' date.
-            if ($dates['from'] && $now >= $dates['from']) {
+            // On open — only within the first 24 h of opening.
+            if ($dates['from'] && $now >= $dates['from'] && $now < $dates['from'] + DAYSECS) {
                 $notifications[] = 'on_open';
             }
 
@@ -182,43 +189,61 @@ class send_notifications extends \core\task\scheduled_task {
      * @param array $dates
      */
     private static function send_notification($user, $quiz, $course, $cm, string $notiftype, array $dates): void {
-        $a = new \stdClass();
-        $a->quizname = format_string($quiz->name);
-        $a->coursename = format_string($course->fullname);
-        $a->url = (new \moodle_url('/mod/quiz/view.php', ['id' => $cm->id]))->out(false);
+        global $DB;
+
+        $loginurl = (new \moodle_url('/login/index.php'))->out(false);
+
+        $gradeitem = $DB->get_record('grade_items', [
+            'itemtype'     => 'mod',
+            'itemmodule'   => 'quiz',
+            'iteminstance' => $quiz->id,
+        ], 'gradepass');
+        $gradepass = '';
+        if ($gradeitem && $gradeitem->gradepass > 0 && $quiz->grade > 0) {
+            $gradepass = round(($gradeitem->gradepass / $quiz->grade) * 100) . '%';
+        }
+
+        $dateformat = get_string('strftimerecentfull', 'langconfig');
+        $closedate  = !empty($dates['until']) ? userdate($dates['until'], $dateformat) : '';
+
+        $a = (object) [
+            'loginurl'  => $loginurl,
+            'closedate' => $closedate,
+            'gradepass' => $gradepass,
+        ];
 
         switch ($notiftype) {
             case '7days_before':
-                $a->opendate = userdate($dates['from']);
-                $subject = get_string('notification_subject_7days', 'quizaccess_internaltest', $a);
-                $body = get_string('notification_body_7days', 'quizaccess_internaltest', $a);
+                $strkey = '7days';
                 break;
             case 'on_open':
-                $subject = get_string('notification_subject_open', 'quizaccess_internaltest', $a);
-                $body = get_string('notification_body_open', 'quizaccess_internaltest', $a);
+                $strkey = 'open';
                 break;
             case '24h_before_close':
-                $a->closedate = userdate($dates['until']);
-                $subject = get_string('notification_subject_closing', 'quizaccess_internaltest', $a);
-                $body = get_string('notification_body_closing', 'quizaccess_internaltest', $a);
+                $strkey = 'closing';
                 break;
             default:
                 return;
         }
 
+        $subject = get_string('notification_subject_' . $strkey, 'quizaccess_internaltest');
+        $body    = get_string('notification_body_' . $strkey, 'quizaccess_internaltest', $a);
+
+        $ahtml = clone $a;
+        $ahtml->loginurl = '<a href="' . s($loginurl) . '">' . s($loginurl) . '</a>';
+        $bodyhtml = nl2br(get_string('notification_body_' . $strkey, 'quizaccess_internaltest', $ahtml));
+
         $message = new \core\message\message();
-        $message->component = 'quizaccess_internaltest';
-        $message->name = 'internaltest_reminder';
-        $message->userfrom = \core_user::get_noreply_user();
-        $message->userto = $user;
-        $message->subject = $subject;
-        $message->fullmessage = $body;
+        $message->component         = 'quizaccess_internaltest';
+        $message->name              = 'internaltest_reminder';
+        $message->userfrom          = \core_user::get_noreply_user();
+        $message->userto            = $user;
+        $message->subject           = $subject;
+        $message->fullmessage       = $body;
         $message->fullmessageformat = FORMAT_PLAIN;
-        $message->fullmessagehtml = '<p>' . nl2br(s($body)) . '</p>';
-        $message->smallmessage = $subject;
-        $message->notification = 1;
-        $message->contexturl = $a->url;
-        $message->contexturlname = $a->quizname;
+        $message->fullmessagehtml   = $bodyhtml;
+        $message->smallmessage      = $subject;
+        $message->notification      = 1;
 
         $result = message_send($message);
         if (!$result) {
@@ -236,36 +261,34 @@ class send_notifications extends \core\task\scheduled_task {
      * @param array $dates
      */
     private static function send_sms_notification($user, $quiz, $course, string $notiftype, array $dates): void {
-        $quizname = format_string($quiz->name);
-        $coursename = format_string($course->fullname);
+        if (!class_exists('\local_support\sms_service') || empty($user->phone1)) {
+            return;
+        }
+
+        $loginurl  = (new \moodle_url('/login/index.php'))->out(false);
+        $dateformat = get_string('strftimedaydatetime', 'langconfig');
+        $closedate  = !empty($dates['until']) ? userdate($dates['until'], $dateformat) : '';
+
+        $a = (object) [
+            'loginurl'  => $loginurl,
+            'closedate' => $closedate,
+        ];
 
         switch ($notiftype) {
             case '7days_before':
-                $opendate = userdate($dates['from'], get_string('strftimedaydatetime', 'langconfig'));
-                $text = get_string('sms_7days', 'quizaccess_internaltest', (object)[
-                    'quizname' => $quizname,
-                    'coursename' => $coursename,
-                    'opendate' => $opendate,
-                ]);
+                $smskey = 'sms_7days';
                 break;
             case 'on_open':
-                $text = get_string('sms_open', 'quizaccess_internaltest', (object)[
-                    'quizname' => $quizname,
-                    'coursename' => $coursename,
-                ]);
+                $smskey = empty($dates['until']) ? 'sms_open_noclose' : 'sms_open';
                 break;
             case '24h_before_close':
-                $closedate = userdate($dates['until'], get_string('strftimedaydatetime', 'langconfig'));
-                $text = get_string('sms_closing', 'quizaccess_internaltest', (object)[
-                    'quizname' => $quizname,
-                    'coursename' => $coursename,
-                    'closedate' => $closedate,
-                ]);
+                $smskey = 'sms_closing';
                 break;
             default:
                 return;
         }
 
-        \local_support\sms_service::send($user, $text, 'quizaccess_internaltest', 'sms_' . $notiftype, (int)$quiz->id);
+        $text = get_string($smskey, 'quizaccess_internaltest', $a);
+        \local_support\sms_service::send($user, $text, 'quizaccess_internaltest', $smskey, (int) $quiz->id);
     }
 }

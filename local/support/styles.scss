@@ -630,9 +630,28 @@ body[id^="page-admin-local-"] {
     left: 260px;
     width: calc(100% - 260px);
     top: 200px;
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
   }
 }
 
 .generaltable{
   min-width: unset !important;
+}
+
+#page-mod-assign-grader{
+  #fitem_id_editpdf{
+    display: none !important;
+  }
+  #grading-navigation{
+    a{
+      color: #333 !important;
+    }
+  }
+  div[data-region="grade-actions"]{
+    .btn-toolbar.collapse-buttons{
+      display: none !important;
+    }
+  }
 }

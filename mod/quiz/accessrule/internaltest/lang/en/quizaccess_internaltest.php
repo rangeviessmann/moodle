@@ -32,13 +32,17 @@ $string['privacy:metadata:quizaccess_inttest_results:userid'] = 'The ID of the u
 $string['privacy:metadata:quizaccess_inttest_results:jsondata'] = 'JSON data containing questions and user answers.';
 $string['privacy:metadata:quizaccess_inttest_results:timecreated'] = 'The time the result was recorded.';
 $string['messageprovider:internaltest_reminder'] = 'Credit reminders';
-$string['notification_subject_7days'] = 'Credit "{$a->quizname}" opens in 7 days';
-$string['notification_subject_open'] = 'Credit "{$a->quizname}" is now available';
-$string['notification_subject_closing'] = 'Credit "{$a->quizname}" closes in 24 hours';
-$string['notification_body_7days'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" will open in 7 days ({$a->opendate}). Please prepare accordingly.';
-$string['notification_body_open'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" is now available. You can start it at: {$a->url}';
-$string['notification_body_closing'] = 'The credit "{$a->quizname}" in course "{$a->coursename}" closes in 24 hours ({$a->closedate}). Please complete it before the deadline.';
+$string['notification_subject_7days'] = 'Internal tests will be available in 7 days';
+$string['notification_subject_open'] = 'Internal tests are now available';
+$string['notification_subject_closing'] = 'Internal tests will be available for 24 more hours';
+$string['notification_body_7days'] = 'Please be informed that the internal tests for the Vocational Qualification Course will be available in 7 days in your student panel. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
+$string['notification_body_open'] = 'Please be informed that the internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
+$string['notification_body_closing'] = 'Please be informed that the internal tests for the Vocational Qualification Course will be available in your student panel for 24 more hours. Log in: {$a->loginurl}
+The tests are mandatory for all students. You must complete them before {$a->closedate} and achieve a minimum of {$a->gradepass} to pass the course.';
 $string['taskname'] = 'Send credit notifications';
-$string['sms_7days'] = 'Credit "{$a->quizname}" ({$a->coursename}) opens on {$a->opendate}. Please prepare.';
-$string['sms_open'] = 'Credit "{$a->quizname}" ({$a->coursename}) is now available. Log in to start.';
-$string['sms_closing'] = 'Credit "{$a->quizname}" ({$a->coursename}) closes on {$a->closedate}. Complete it before the deadline.';
+$string['sms_7days'] = 'Internal tests for the Vocational Qualification Course will be available in 7 days. Log in: {$a->loginurl}';
+$string['sms_open'] = 'Internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl} Complete tests before {$a->closedate}';
+$string['sms_open_noclose'] = 'Internal tests for the Vocational Qualification Course are now available in your student panel. Log in: {$a->loginurl}';
+$string['sms_closing'] = 'Internal tests for the Vocational Qualification Course will be available for 24 more hours. Log in: {$a->loginurl}';
