@@ -78,24 +78,23 @@ class send_notifications extends \core\task\scheduled_task {
             // Each notification type checks only its own date independently.
             $notifications = [];
 
-            // 7 days before open — only if quiz opens in ≥ 6 days (avoids sending stale notice).
+            // 7 days before open — 1-hour window starting exactly 7 days before opening.
             if ($dates['from']) {
                 $sevendays = $dates['from'] - (7 * DAYSECS);
-                $remaining = $dates['from'] - $now;
-                if ($now >= $sevendays && $remaining >= 6 * DAYSECS) {
+                if ($now >= $sevendays && $now < $sevendays + HOURSECS) {
                     $notifications[] = '7days_before';
                 }
             }
 
-            // On open — only within the first 24 h of opening.
-            if ($dates['from'] && $now >= $dates['from'] && $now < $dates['from'] + DAYSECS) {
+            // On open — 1-hour window starting at the open time.
+            if ($dates['from'] && $now >= $dates['from'] && $now < $dates['from'] + HOURSECS) {
                 $notifications[] = 'on_open';
             }
 
-            // 24h before close — requires only 'until' date.
+            // 24h before close — 1-hour window starting exactly 24 h before closing.
             if ($dates['until']) {
                 $onedaybefore = $dates['until'] - DAYSECS;
-                if ($now >= $onedaybefore && $now < $dates['until']) {
+                if ($now >= $onedaybefore && $now < $onedaybefore + HOURSECS) {
                     $notifications[] = '24h_before_close';
                 }
             }
