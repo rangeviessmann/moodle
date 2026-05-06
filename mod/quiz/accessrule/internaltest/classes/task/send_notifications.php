@@ -108,6 +108,13 @@ class send_notifications extends \core\task\scheduled_task {
                     continue;
                 }
 
+                // Record FIRST to prevent duplicates if cron runs in parallel.
+                $DB->insert_record('quizaccess_inttest_notif', (object)[
+                    'quizid'    => $quiz->id,
+                    'notiftype' => $notiftype,
+                    'timesent'  => $now,
+                ]);
+
                 // Send to all enrolled users.
                 $context = \context_course::instance($course->id);
                 $users = get_enrolled_users($context, '', 0, 'u.*', null, 0, 0, true);
@@ -116,13 +123,6 @@ class send_notifications extends \core\task\scheduled_task {
                     self::send_notification($user, $quiz, $course, $cm, $notiftype, $dates);
                     self::send_sms_notification($user, $quiz, $course, $notiftype, $dates);
                 }
-
-                // Record that notification was sent.
-                $DB->insert_record('quizaccess_inttest_notif', (object)[
-                    'quizid'    => $quiz->id,
-                    'notiftype' => $notiftype,
-                    'timesent'  => $now,
-                ]);
 
                 mtrace("  Internal test notification '{$notiftype}' sent for quiz {$quiz->id} ({$quiz->name})");
             }
